@@ -1,0 +1,40 @@
+version: '3'
+services:
+  simpleapp:
+    container_name: simpleapp
+    image: ceranbs/simpleapp:latest
+    ports:
+      - "8080:8080"
+    environment: 
+      - targethost=localhost:8083
+      - PYTHONUNBUFFERED=TRUE
+    networks: 
+      - mynetwork1
+    depends_on:
+      - simpleapp2
+    logging:
+      driver: awslogs
+      options: 
+        awslogs-group: tutorial
+        awslogs-region: eu-central-1
+        awslogs-stream-prefix: simpleapp
+
+  simpleapp2:
+    container_name: simpleapp2
+    image: ceranbs/simpleapp2:latest
+    environment: 
+      - PYTHONUNBUFFERED=TRUE
+    networks: 
+      - mynetwork1
+    logging:
+      driver: awslogs
+      options: 
+        awslogs-group: tutorial
+        awslogs-region: eu-central-1
+        awslogs-stream-prefix: simpleapp2
+
+networks: 
+  mynetwork1:
+    driver: bridge
+ 
+ 

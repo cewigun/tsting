@@ -1,0 +1,45 @@
+version: '3'
+services:
+  nginx:
+    container_name: nginx
+    build:
+      context: ./nginx-container
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    networks: 
+      - mynetwork1
+    hostname: nginx   
+    depends_on:
+      - simpleapp
+
+  simpleapp:
+    container_name: simpleapp
+    build:
+      context: ./simpleapp
+      dockerfile: Dockerfile
+    environment: 
+      - targethost=simpleapp2:8083
+      - PYTHONUNBUFFERED=TRUE
+    networks: 
+      - mynetwork1
+    hostname: simpleapp   
+    depends_on:
+      - simpleapp2
+
+  simpleapp2:
+    container_name: simpleapp2
+    build:
+      context: ./simpleapp
+      dockerfile: Dockerfile2
+    environment: 
+      - PYTHONUNBUFFERED=TRUE
+    networks: 
+      - mynetwork1
+    hostname: simpleapp2
+
+networks: 
+  mynetwork1:
+    driver: bridge
+ 
+ 
